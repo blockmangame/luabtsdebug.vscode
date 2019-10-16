@@ -1,0 +1,131 @@
+{
+	"name": "luabtsdebug",
+	"displayName": "Lua BTS Debug",
+	"icon": "images/sandbox.png",
+	"description": "VSCode Debugger extension for Lua and BTS.",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.38.0"
+	},
+	"categories": [
+		"Debuggers"
+	],
+	"keywords": [
+		"lua",
+		"bts",
+		"debug",
+		"debugger"
+	],
+	"author": {
+		"name": "fanzai0403"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/blockmangame/luabtsdebug"
+	},
+	"bugs": {
+		"url": "https://github.com/blockmangame/luabtsdebug/issues"
+	},
+	"activationEvents": [
+		"onDebug"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"breakpoints": [
+			{
+				"language": "lua"
+			},
+			{
+				"language": "bts"
+			}
+		],
+		"debuggers": [
+			{
+				"type": "luabts",
+				"languages": [
+					"lua",
+					"bts"
+				],
+				"label": "Lua/BTS Debug",
+				"program": "./out/debugAdapter.js",
+				"runtime": "node",
+				"configurationAttributes": {
+					"attach": {
+						"properties": {
+							"stopOnEntry": {
+								"type": "boolean",
+								"description": "Automatically stop after attach.",
+								"default": true
+							},
+							"resDir": {
+								"type": "string",
+								"description": "lua files dir",
+								"default": "${workspaceRoot}/.."
+							},
+							"gameDir": {
+								"type": "string",
+								"description": "lua files dir",
+								"default": "${workspaceRoot}/../game/{gameName};${workspaceRoot}/../game_res/{gameName}"
+							},
+							"targetAddr": {
+								"type": "string",
+								"description": "debug target address",
+								"default": "${command:AskForGameAddr}"
+							}
+						}
+					}
+				},
+				"initialConfigurations": [
+					{
+						"name": "Attach Game",
+						"type": "luabts",
+						"request": "attach",
+						"resDir": "${workspaceRoot}/..",
+						"gameDir": "${workspaceRoot}/../game/{gameName};${workspaceRoot}/../game_res/{gameName}",
+						"targetAddr": "${command:AskForGameAddr}",
+						"stopOnEntry": true
+					}
+				],
+				"configurationSnippets": [
+					{
+						"label": "Lua/BTS Debug",
+						"description": "A new configuration for debugging blockmango game lua/bts.",
+						"body": {
+							"name": "Attach Game",
+							"type": "luabts",
+							"request": "attach",
+							"resDir": "^\"\\${workspaceRoot}/..\"",
+							"gameDir": "^\"\\${workspaceRoot}/../game/{gameName};\\${workspaceRoot}/../game_res/{gameName}\"",
+							"targetAddr": "^\"\\${command:AskForGameAddr}\"",
+							"stopOnEntry": true
+						}
+					}
+				],
+				"variables": {
+					"AskForGameAddr": "extension.luabtsdebug.getGameAddr"
+				}
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.1",
+		"@types/mocha": "^5.2.6",
+		"@types/node": "^10.12.21",
+		"@types/vscode": "^1.38.0",
+		"glob": "^7.1.4",
+		"mocha": "^6.1.4",
+		"typescript": "^3.3.1",
+		"tslint": "^5.12.1",
+		"vscode-test": "^1.2.0"
+	},
+	"dependencies": {
+		"vscode-debugadapter": "^1.37.1"
+	}
+}
