@@ -3,7 +3,8 @@
 	"displayName": "Lua BTS Debug",
 	"icon": "images/sandbox.png",
 	"description": "VSCode Debugger extension for Lua and BTS.",
-	"version": "0.0.1",
+	"publisher": "fanzai0403",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.38.0"
 	},
@@ -17,7 +18,7 @@
 		"debugger"
 	],
 	"author": {
-		"name": "fanzai0403"
+		"name": "SandBoxOL"
 	},
 	"repository": {
 		"type": "git",
