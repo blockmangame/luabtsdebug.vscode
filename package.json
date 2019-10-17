@@ -4,7 +4,7 @@
 	"icon": "images/sandbox.png",
 	"description": "VSCode Debugger extension for Lua and BTS.",
 	"publisher": "fanzai0403",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"engines": {
 		"vscode": "^1.38.0"
 	},
@@ -61,12 +61,12 @@
 							"resDir": {
 								"type": "string",
 								"description": "lua files dir",
-								"default": "${workspaceRoot}/.."
+								"default": "${workspaceRoot}"
 							},
 							"gameDir": {
 								"type": "string",
 								"description": "lua files dir",
-								"default": "${workspaceRoot}/../game/{gameName};${workspaceRoot}/../game_res/{gameName}"
+								"default": "${workspaceRoot}/game/{gameName};${workspaceRoot}/game_res/{gameName}"
 							},
 							"targetAddr": {
 								"type": "string",
@@ -81,8 +81,6 @@
 						"name": "Attach Game",
 						"type": "luabts",
 						"request": "attach",
-						"resDir": "${workspaceRoot}/..",
-						"gameDir": "${workspaceRoot}/../game/{gameName};${workspaceRoot}/../game_res/{gameName}",
 						"targetAddr": "${command:AskForGameAddr}",
 						"stopOnEntry": true
 					}
@@ -95,8 +93,6 @@
 							"name": "Attach Game",
 							"type": "luabts",
 							"request": "attach",
-							"resDir": "^\"\\${workspaceRoot}/..\"",
-							"gameDir": "^\"\\${workspaceRoot}/../game/{gameName};\\${workspaceRoot}/../game_res/{gameName}\"",
 							"targetAddr": "^\"\\${command:AskForGameAddr}\"",
 							"stopOnEntry": true
 						}
