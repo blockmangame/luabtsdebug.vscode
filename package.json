@@ -20,12 +20,13 @@
 	"author": {
 		"name": "SandBoxOL"
 	},
+	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/blockmangame/luabtsdebug"
+		"url": "https://github.com/blockmangame/luabtsdebug.vscode"
 	},
 	"bugs": {
-		"url": "https://github.com/blockmangame/luabtsdebug/issues"
+		"url": "https://github.com/blockmangame/luabtsdebug.vscode/issues"
 	},
 	"activationEvents": [
 		"onDebug"
