@@ -61,12 +61,12 @@
 							},
 							"resDir": {
 								"type": "string",
-								"description": "lua files dir",
+								"description": "engine files dir",
 								"default": "${workspaceRoot}"
 							},
 							"gameDir": {
 								"type": "string",
-								"description": "lua files dir",
+								"description": "game config dir",
 								"default": "${workspaceRoot}/game/{gameName};${workspaceRoot}/game_res/{gameName}"
 							},
 							"targetAddr": {

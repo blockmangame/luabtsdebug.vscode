@@ -86,5 +86,5 @@ function exit() {
 
 function msg2txt(msg: DebugProtocol.ProtocolMessage) {
     let json = JSON.stringify(msg);
-    return 'Content-Length:' + json.length.toString() + '\r\n\r\n' + json;
+    return 'Content-Length: ' + json.length.toString() + '\r\n\r\n' + json;
 }
