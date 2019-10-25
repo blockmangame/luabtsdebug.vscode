@@ -39,6 +39,7 @@ function processPacket(req: DebugProtocol.Request) {
         res.body = {};
         res.body.supportsConfigurationDoneRequest = true;
         res.body.supportsEvaluateForHovers = true;
+        res.body.supportsSetVariable = true;
         process.stdout.write(msg2txt(res));
     } else if (req.command === 'attach') {
         start(req.arguments.targetAddr, req);
