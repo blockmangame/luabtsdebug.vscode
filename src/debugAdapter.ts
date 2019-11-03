@@ -40,6 +40,18 @@ function processPacket(req: DebugProtocol.Request) {
         res.body.supportsConfigurationDoneRequest = true;
         res.body.supportsEvaluateForHovers = true;
         res.body.supportsSetVariable = true;
+        res.body.supportsExceptionInfoRequest = true;
+        res.body.exceptionBreakpointFilters = [
+            {
+                'filter': 'perror',
+                'label': 'SCRIPT_EXCEPTION output',
+                'default': false
+            }, {
+                'filter': 'xpcall',
+                'label': 'Exception in xpcall',
+                'default': true
+            },
+        ];
         process.stdout.write(msg2txt(res));
     } else if (req.command === 'attach') {
         start(req.arguments.targetAddr, req);
