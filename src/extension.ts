@@ -26,7 +26,8 @@ function listGameAddr(): Thenable<string[]> {
 	udp.on('message', (msg, rinfo) => {
 		let data = JSON.parse(msg.toString());
 		let typ = data.client ? 'client' : 'server';
-		list[list.length] = `${rinfo.address}:${rinfo.port.toString()} - ${data.name}<${data.game}.${data.engineVersion}> ${typ} - ${data.sys}`;
+		let sys = data.device || data.sys;
+		list[list.length] = `${rinfo.address}:${rinfo.port.toString()} - ${data.name}<${data.game}.${data.engineVersion}> ${typ} - ${sys}`;
 	});
 	return new Promise((resolve) => {
 		setTimeout(() => {

@@ -4,7 +4,7 @@
 	"icon": "images/sandbox.png",
 	"description": "VSCode Debugger extension for Lua and BTS.",
 	"publisher": "fanzai0403",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"engines": {
 		"vscode": "^1.38.0"
 	},

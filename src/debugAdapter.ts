@@ -48,8 +48,12 @@ function processPacket(req: DebugProtocol.Request) {
                 'default': false
             }, {
                 'filter': 'xpcall',
-                'label': 'Exception in xpcall',
+                'label': 'exception in xpcall',
                 'default': true
+            }, {
+                'filter': 'endless',
+                'label': 'break when endless',
+                'default': false
             },
         ];
         process.stdout.write(msg2txt(res));
