@@ -1,6 +1,7 @@
 import * as dgram from 'dgram';
 import * as Net from 'net';
 import { DebugProtocol } from 'vscode-debugprotocol';
+import { spawn } from 'child_process';
 
 let socket: Net.Socket | null = null;
 let recvStr = "";
@@ -58,39 +59,52 @@ function processPacket(req: DebugProtocol.Request) {
         ];
         process.stdout.write(msg2txt(res));
     } else if (req.command === 'attach') {
-        start(req.arguments.targetAddr, req);
+        let addr = req.arguments.targetAddr;
+        let index = addr.indexOf(' ');
+        if (index >= 0) {
+            addr = addr.substr(0, index);
+        }
+        index = addr.indexOf(':');
+        let host = addr.substr(0, index);
+        let port = parseInt(addr.substr(index + 1));
+        let udp = dgram.createSocket('udp4');
+        udp.send('{"typ":"debug"}', port, host);
+        udp.on('message', msg => {
+            let dbgData = JSON.parse(msg.toString());
+            udp.close();
+            socket = Net.connect(dbgData.port, host);
+            start(socket, req);
+        });
+    } else if (req.command === 'launch') {
+        let server = Net.createServer(socket => {
+            server.close();
+            start(socket, req);
+        });
+        let port = (server.listen().address() as Net.AddressInfo).port;
+        spawn(req.arguments.gameExe, [req.arguments.gameArgs], {
+            cwd : req.arguments.resDir,
+            env : { DebugConnect : port.toString() },
+            shell : true,
+            detached : true
+        });
     } else {
         exit();
     }
 }
 
-function start(addr: string, req: DebugProtocol.Request) {
+function start(socket: Net.Socket, req: DebugProtocol.Request) {
     process.stdin.off('data', recvStdin);
 
-    let index = addr.indexOf(' ');
-    if (index >= 0) {
-        addr = addr.substr(0, index);
-    }
-    index = addr.indexOf(':');
-    let host = addr.substr(0, index);
-    let port = parseInt(addr.substr(index + 1));
-    let udp = dgram.createSocket('udp4');
-    udp.send('{"typ":"debug"}', port, host);
-    udp.on('message', msg => {
-        let dbgData = JSON.parse(msg.toString());
-        udp.close();
-        socket = Net.connect(dbgData.port, host);
-        socket.write(msg2txt(req));
-        process.stdin.on('data', (data: Buffer) => {
-            if (socket) {
-                socket.write(data);
-            }
-        });
-        process.stdin.on('close', exit);
-        socket.on('data', (data: Buffer) => process.stdout.write(data));
-        socket.on('close', exit);
-        socket.on('error', exit);
+    socket.write(msg2txt(req));
+    process.stdin.on('data', (data: Buffer) => {
+        if (socket) {
+            socket.write(data);
+        }
     });
+    process.stdin.on('close', exit);
+    socket.on('data', (data: Buffer) => process.stdout.write(data));
+    socket.on('close', exit);
+    socket.on('error', exit);
 }
 
 function exit() {
@@ -104,4 +118,15 @@ function exit() {
 function msg2txt(msg: DebugProtocol.ProtocolMessage) {
     let json = JSON.stringify(msg);
     return 'Content-Length: ' + json.length.toString() + '\r\n\r\n' + json;
+}
+
+function errMsg(msg: string, req: DebugProtocol.Request){
+    let res = <DebugProtocol.Response>{};
+    res.type = 'response';
+    res.command = req.command;
+    res.request_seq = req.seq;
+    res.body = {};
+    res.success = false;
+    res.message = msg;
+    process.stdout.write(msg2txt(res));
 }

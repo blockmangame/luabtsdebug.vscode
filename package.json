@@ -4,7 +4,7 @@
 	"icon": "images/sandbox.png",
 	"description": "VSCode Debugger extension for Lua and BTS.",
 	"publisher": "fanzai0403",
-	"version": "0.2.2",
+	"version": "0.3.0",
 	"engines": {
 		"vscode": "^1.38.0"
 	},
@@ -75,6 +75,35 @@
 								"default": "${command:AskForGameAddr}"
 							}
 						}
+					},
+					"launch": {
+						"properties": {
+							"stopOnEntry": {
+								"type": "boolean",
+								"description": "Automatically stop after attach.",
+								"default": true
+							},
+							"resDir": {
+								"type": "string",
+								"description": "engine files dir",
+								"default": "${workspaceRoot}"
+							},
+							"gameDir": {
+								"type": "string",
+								"description": "game config dir",
+								"default": "${workspaceRoot}/game/{gameName};${workspaceRoot}/game_res/{gameName}"
+							},
+							"gameExe": {
+								"type": "string",
+								"description": "game exe file path.",
+								"default": "${workspaceRoot}/GameServer_d.exe"
+							},
+							"gameArgs": {
+								"type": "string",
+								"description": "start arguments.",
+								"default": ""
+							}
+						}
 					}
 				},
 				"initialConfigurations": [
@@ -88,7 +117,7 @@
 				],
 				"configurationSnippets": [
 					{
-						"label": "Lua/BTS Debug",
+						"label": "Lua/BTS Debug: Attach",
 						"description": "A new configuration for debugging blockmango game lua/bts.",
 						"body": {
 							"name": "Attach Game",
@@ -97,7 +126,19 @@
 							"targetAddr": "^\"\\${command:AskForGameAddr}\"",
 							"stopOnEntry": true
 						}
-					}
+					},
+                    {
+                        "label": "Lua/BTS Debug: Launch",
+                        "description": "A new configuration for launching blockmango game lua/bts.",
+                        "body": {
+                            "name": "Launch Game",
+                            "type": "luabts",
+                            "request": "launch",
+                            "stopOnEntry": true,
+                            "resDir": "^\"\\${workspaceRoot}\"",
+                            "gameExe": "^\"\\${workspaceRoot}/GameServer_d.exe\""
+                        }
+                    }
 				],
 				"variables": {
 					"AskForGameAddr": "extension.luabtsdebug.getGameAddr"
@@ -110,7 +151,8 @@
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"pretest": "npm run compile",
-		"test": "node ./out/test/runTest.js"
+		"test": "node ./out/test/runTest.js",
+		"package": "vsce package"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
