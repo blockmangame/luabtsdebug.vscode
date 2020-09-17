@@ -2,6 +2,7 @@ import * as dgram from 'dgram';
 import * as Net from 'net';
 import { DebugProtocol } from 'vscode-debugprotocol';
 import { spawn } from 'child_process';
+import * as fs from 'fs';
 
 let socket: Net.Socket | null = null;
 let recvStr = "";
@@ -94,6 +95,38 @@ function processPacket(req: DebugProtocol.Request) {
 
 function start(socket: Net.Socket, req: DebugProtocol.Request) {
     process.stdin.off('data', recvStdin);
+
+    var args = req.arguments;
+    if(!args.gameDir && args.resDir) {
+        let resDir = (args.resDir as string).replace(/\//g, '\\');
+        if (resDir.endsWith('\\')) {
+            resDir = resDir.substring(0, resDir.length-1);
+        }
+        let path = resDir + '\\gameconfig.json';
+        try {
+            let text = fs.readFileSync(path, 'utf-8');
+            var cfg = JSON.parse(text);
+
+            let gameDir = (cfg.dataDir as string || 'game').replace(/\//g, '\\');
+            let gameType = (cfg.gtype as string || 'sample');
+            if (gameDir.startsWith('.\\')) {
+                gameDir = gameDir.substring(2);
+            }
+            if (gameDir.endsWith('\\')) {
+                gameDir = gameDir.substring(0, gameDir.length-1);
+            }
+            if (gameDir === 'game' && !fs.existsSync(resDir + '\\game\\' + gameType)) {
+                gameDir = 'game_res';
+            }
+            if (gameDir.length < 2 || (gameDir[1] !== ':' && gameDir[0] !== '\\')) {
+                gameDir = resDir + '\\' + gameDir;
+            }
+            if (fs.existsSync(gameDir + '\\' + gameType)) {
+                args.gameDir = gameDir + "\\{gameName}";
+            }
+        } catch (err) {
+        }
+    }
 
     socket.write(msg2txt(req));
     process.stdin.on('data', (data: Buffer) => {

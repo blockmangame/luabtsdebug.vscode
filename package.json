@@ -67,7 +67,7 @@
 							"gameDir": {
 								"type": "string",
 								"description": "game config dir",
-								"default": "${workspaceRoot}/game/{gameName};${workspaceRoot}/game_res/{gameName}"
+								"default": "${workspaceRoot}/game_res/{gameName}"
 							},
 							"targetAddr": {
 								"type": "string",
@@ -91,7 +91,7 @@
 							"gameDir": {
 								"type": "string",
 								"description": "game config dir",
-								"default": "${workspaceRoot}/game/{gameName};${workspaceRoot}/game_res/{gameName}"
+								"default": "${workspaceRoot}/game_res/{gameName}"
 							},
 							"gameExe": {
 								"type": "string",
@@ -134,7 +134,7 @@
                             "name": "Launch Game",
                             "type": "luabts",
                             "request": "launch",
-                            "stopOnEntry": true,
+                            "stopOnEntry": false,
                             "resDir": "^\"\\${workspaceRoot}\"",
                             "gameExe": "^\"\\${workspaceRoot}/GameServer_d.exe\""
                         }
